@@ -2,28 +2,27 @@
 import "./styles.css";
 // <⚠️ /DONT DELETE THIS ⚠️>
 
-const form = document.querySelector(".js-country-selection"),
-    input = form.querySelector("option");
+const select = document.querySelector(".js-country-selection"),
+    options = select.options;
 
 const LOCATION_LS = "currentCountry";
 
-function saveCountry(text) {
-    localStorage.setItem(LOCATION_LS, text);
+function handleChange(event) {
+    const currentValue = event.target.value;
+    localStorage.setItem(LOCATION_LS, currentValue);
+    chooseCountry(currentValue);
 }
 
-function handleSubmit(event) {
-    event.preventDefault();
-    const currentValue = input.value;
-    showCountry(currentValue);
-    saveCountry(currentValue);
+function chooseCountry(text) {
+    for (let i = 0; i < options.length; i++) {
+        if (text === options[i].value) {
+            options[i].setAttribute("selected", "true");
+        }
+    }
 }
 
 function askForCountry() {
-    form.addEventListener("change", handleSubmit);
-}
-
-function showCountry(text) {
-    input.innerHTML = `${text}`;
+    select.addEventListener("change", handleChange);
 }
 
 function loadCountry() {
@@ -31,7 +30,7 @@ function loadCountry() {
     if (currentCountry == null) {
         askForCountry();
     } else {
-        showCountry(currentCountry);
+        chooseCountry(currentCountry);
     }
 }
 
